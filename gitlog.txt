@@ -1,3 +1,15 @@
+commit 0fd28cf42d224f62a9663627f8cafd7fa4091f4e
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sun Mar 5 19:41:25 2017 -0500
+
+    File input added
+
+commit 2246f7defa64fda49eaa125478ff0e48e747aea9
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Mar 4 23:44:41 2017 -0500
+
+    Added gitlog
+
 commit 486bbd6e87d9c91fa6b1780c1668baf743f30cf0
 Author: Jason Zhang <jz1242@gmail.com>
 Date:   Sat Mar 4 23:39:39 2017 -0500
