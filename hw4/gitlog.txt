@@ -1,3 +1,9 @@
+commit 0c118167f7c171b94be36d9bd3012d0a195f2299
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Tue Mar 7 23:55:29 2017 -0500
+
+    Modularized program, created header file, added makefile
+
 commit 6291a26911005cc64f8221066d2bac6997e4784f
 Author: Jason Zhang <jz1242@gmail.com>
 Date:   Tue Mar 7 22:53:56 2017 -0500

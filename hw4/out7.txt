@@ -1,0 +1,4 @@
+G 0 4 6 8 15 16 19 20
+TCAGAGACCC Not found
+CCGAGA Not found
+GGAA 19

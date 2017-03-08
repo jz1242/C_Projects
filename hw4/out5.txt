@@ -1,0 +1,3 @@
+C Not found
+G 1
+A 2
