@@ -41,13 +41,13 @@ int* checkMatch(char toCheck[], int len, int lenTot) {
 
 void printAll(char check[], int a[]){
     int i = 0;
-    printf("%s ", check);
+    printf("%s", check);
     while(a[i] != -1){
-        printf("%d ", a[i]);
+        printf(" %d", a[i]);
         i++;
     }
     if(i < 1){
-        printf("Not found");
+        printf(" Not found");
     }
     printf("\n");
 
@@ -70,14 +70,14 @@ int main(int argc, char* argv[]) {
            count++;
        }
        else if(!isspace(temp) && (!(toupper(temp) == 'A' || toupper(temp) == 'C' || toupper(temp) == 'T' || toupper(temp) == 'G') || count > 15000) ){
-           printf("Invalid text file");
+           printf("Invalid text file\n");
            return 0;
        }
 
     }
     fclose(input);
-    printf("%s\n", data); //2 spots for \n
-    printf("%d", count);
+    //printf("%s\n", data); //2 spots for \n
+
 
     int q = 0;
     char temp2;
@@ -86,25 +86,42 @@ int main(int argc, char* argv[]) {
         countPat++;
         q++;
     }
-    match[q - 2] = ' ';
+    match[q - 1] = ' ';
 
     char pat[15000];
     int *hold;
     int offset;
-
+    bool cont = true;
     for (int i = 0; i < countPat; i++) {
         if (match[i] == ' ') {
-            if(i - offset + 1 > count){
-                printf("Invalid pattern");
+            if(i - offset > count){
+                printf("Invalid pattern\n");
             }
             else{
-                strncpy(pat, match + offset, (i - offset) + 1);
+                strncpy(pat, match + offset, (i - offset));
                 pat[i - offset] = '\0';
-                hold = checkMatch(pat, (i - offset), count);
-                printAll(pat, hold);
-                free(hold);
-                offset = (i + 1);
+
+                for(int j = 0; j < i - offset; j++){
+                    if(pat[j] == 'A' || pat[j] == 'C' || pat[j] == 'T'|| pat[j] == 'G'){
+                        cont = true;
+
+                    }
+                    else{
+                        cont = false;
+                        break;
+                    }
+                }
+               if(cont == true){
+                    hold = checkMatch(pat, (i - offset), count);
+                    printAll(pat, hold);
+                    free(hold);
+                }
+                else{
+                    printf("Invalid pattern\n");
+
+                }
             }
+            offset = (i + 1);
 
         }
     }

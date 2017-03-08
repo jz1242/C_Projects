@@ -1,0 +1,29 @@
+commit 1cb8f06adbf16768ba790b5678d52d74349969fb
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Tue Mar 7 20:27:11 2017 -0500
+
+    Completed search method
+
+commit 6d6de49bf96a8dbf018bb42ca23996eadc1f8730
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Mon Mar 6 00:35:02 2017 -0500
+
+    input functionality complete
+
+commit 0fd28cf42d224f62a9663627f8cafd7fa4091f4e
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sun Mar 5 19:41:25 2017 -0500
+
+    File input added
+
+commit 2246f7defa64fda49eaa125478ff0e48e747aea9
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Mar 4 23:44:41 2017 -0500
+
+    Added gitlog
+
+commit 486bbd6e87d9c91fa6b1780c1668baf743f30cf0
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Mar 4 23:39:39 2017 -0500
+
+    first commit
