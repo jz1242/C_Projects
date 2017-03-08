@@ -1,3 +1,9 @@
+commit 6d6de49bf96a8dbf018bb42ca23996eadc1f8730
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Mon Mar 6 00:35:02 2017 -0500
+
+    input functionality complete
+
 commit 0fd28cf42d224f62a9663627f8cafd7fa4091f4e
 Author: Jason Zhang <jz1242@gmail.com>
 Date:   Sun Mar 5 19:41:25 2017 -0500

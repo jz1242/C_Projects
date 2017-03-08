@@ -19,7 +19,7 @@ int* checkMatch(char toCheck[], int len, int lenTot) {
     int* places = (int *) malloc(sizeof(int)*2000);
     bool match = true;
     int count = 0;
-    for(int i = 0; i < lenTot - len; i++){
+    for(int i = 0; i <= lenTot - len; i++){
         for(int j = 0; j < len; j++){
             if(toCheck[j] != data[i+j]){
                 match = false;
@@ -35,16 +35,22 @@ int* checkMatch(char toCheck[], int len, int lenTot) {
             count++;
         }
     }
+    places[count] = -1;
     return places;
 }
 
-void printAll(int a[]){
+void printAll(char check[], int a[]){
     int i = 0;
+    printf("%s ", check);
     while(a[i] != -1){
         printf("%d ", a[i]);
         i++;
     }
+    if(i < 1){
+        printf("Not found");
+    }
     printf("\n");
+
 }
 
 int main(int argc, char* argv[]) {
@@ -54,35 +60,52 @@ int main(int argc, char* argv[]) {
     }
     int count = 0;
     int countPat = 1;
-
     int s = 0;
+    char temp;
     while (!feof(input)) {
-        fscanf(input, "%c", &data[s]);
-        s++;
-        count++;
+       fscanf(input, "%c", &temp);
+       if(!isspace(temp) && (toupper(temp) == 'A' || toupper(temp) == 'C' || toupper(temp) == 'T' || toupper(temp) == 'G') && count <= 15000){
+           data[s] = toupper(temp);
+           s++;
+           count++;
+       }
+       else if(!isspace(temp) && (!(toupper(temp) == 'A' || toupper(temp) == 'C' || toupper(temp) == 'T' || toupper(temp) == 'G') || count > 15000) ){
+           printf("Invalid text file");
+           return 0;
+       }
 
     }
     fclose(input);
     printf("%s\n", data); //2 spots for \n
-    printf("%c\n", data[9]);
+    printf("%d", count);
 
     int q = 0;
-    while (scanf("%c", &match[q]) >= 1) {
-
+    char temp2;
+    while (scanf("%c", &temp2) >= 1) {
+        match[q] = toupper(temp2);
         countPat++;
         q++;
     }
-    match[q] = ' ';
+    match[q - 2] = ' ';
 
     char pat[15000];
+    int *hold;
     int offset;
+
     for (int i = 0; i < countPat; i++) {
         if (match[i] == ' ') {
-            strncpy(pat, match + offset, (i - offset));
-            pat[i - offset] = '\0';
-            printAll(checkMatch(pat, (i - offset), count - 1));
-            offset = (i + 1);
-            printData[0] = '\0';
+            if(i - offset + 1 > count){
+                printf("Invalid pattern");
+            }
+            else{
+                strncpy(pat, match + offset, (i - offset) + 1);
+                pat[i - offset] = '\0';
+                hold = checkMatch(pat, (i - offset), count);
+                printAll(pat, hold);
+                free(hold);
+                offset = (i + 1);
+            }
+
         }
     }
 
