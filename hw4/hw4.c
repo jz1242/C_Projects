@@ -9,49 +9,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <stdbool.h>
-
-//variables and the function definitions
-char data[15001];
-char match[15001];
-int matched[15000];
-
-int* checkMatch(char toCheck[], int len, int lenTot) {
-    int* places = (int *) malloc(sizeof(int)*2000);
-    bool match = true;
-    int count = 0;
-    for(int i = 0; i <= lenTot - len; i++){
-        for(int j = 0; j < len; j++){
-            if(toCheck[j] != data[i+j]){
-                match = false;
-                break;
-            }
-            else{
-                match = true;
-            }
-
-        }
-        if(match == true){
-            places[count] = i;
-            count++;
-        }
-    }
-    places[count] = -1;
-    return places;
-}
-
-void printAll(char check[], int a[]){
-    int i = 0;
-    printf("%s", check);
-    while(a[i] != -1){
-        printf(" %d", a[i]);
-        i++;
-    }
-    if(i < 1){
-        printf(" Not found");
-    }
-    printf("\n");
-
-}
+#include "dnasearch.h"
 
 int main(int argc, char* argv[]) {
     FILE *input = fopen(argv[1], "r");
@@ -64,12 +22,12 @@ int main(int argc, char* argv[]) {
     char temp;
     while (!feof(input)) {
        fscanf(input, "%c", &temp);
-       if(!isspace(temp) && (toupper(temp) == 'A' || toupper(temp) == 'C' || toupper(temp) == 'T' || toupper(temp) == 'G') && count <= 15000){
+       if(!isspace(temp) && (valid(toupper(temp))) && count <= 15000){
            data[s] = toupper(temp);
            s++;
            count++;
        }
-       else if(!isspace(temp) && (!(toupper(temp) == 'A' || toupper(temp) == 'C' || toupper(temp) == 'T' || toupper(temp) == 'G') || count > 15000) ){
+       else if(!isspace(temp) && (!valid(toupper(temp)) || count > 15000) ){
            printf("Invalid text file\n");
            return 0;
        }
@@ -102,7 +60,7 @@ int main(int argc, char* argv[]) {
                 pat[i - offset] = '\0';
 
                 for(int j = 0; j < i - offset; j++){
-                    if(pat[j] == 'A' || pat[j] == 'C' || pat[j] == 'T'|| pat[j] == 'G'){
+                    if(valid(pat[j])){
                         cont = true;
 
                     }
