@@ -1,3 +1,9 @@
+commit 4587ee0ebe213316191318b838232627c8810708
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Wed Mar 8 18:55:58 2017 -0500
+
+    Tests added, main code complete
+
 commit 0c118167f7c171b94be36d9bd3012d0a195f2299
 Author: Jason Zhang <jz1242@gmail.com>
 Date:   Tue Mar 7 23:55:29 2017 -0500
