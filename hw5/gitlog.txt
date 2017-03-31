@@ -1,0 +1,29 @@
+commit 692c4c5b6b391173007d0ddefb536a34505330ea
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Fri Mar 31 16:23:11 2017 -0400
+
+    Linkedlist almost complete
+
+commit 1ca5967b5e5b7b84b5b7679cedccf1db1248ca74
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Thu Mar 30 18:08:51 2017 -0400
+
+    LinkedList setup complete, new methods added
+
+commit 7138ea8c7590523fe6c2379433c2a7ad337e8252
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Wed Mar 29 19:54:17 2017 -0400
+
+    Added main menu functionality
+
+commit 23102d40244b06203c66ea625ff12cd788e276dd
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Wed Mar 29 17:39:52 2017 -0400
+
+    Data array dynamically expands
+
+commit 39607ef140bd783cb02e50c07eeb5d797305e41f
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Wed Mar 29 17:35:24 2017 -0400
+
+    Course catalog stored in array
