@@ -56,17 +56,17 @@ int compareCourse(Course a, Course b){
     int equal = 1;
     if(checkCase(a.div, b.div) == 0){
         equal = 0;
-       // printf("%c\n", a.div[5]);
+
     }
     if(a.dep != b.dep){
         equal = 0;
-        //printf("here2\n");
+
     }
     if(a.num != b.num){
         equal = 0;
-        //printf("here3\n");
-    }
 
+    }
+    //printf("%d\n",equal );
     return equal;
 }
 int searchCourse(int num, char *str){
@@ -119,6 +119,126 @@ void DeleteHead(node **head){
     *head = e->next;
     free(e);
 }
+
+int searchTranscript(node **head, Course course){
+    node *e;
+    int exist = 0;
+    bool done = false;
+    for(e = *head; e!=NULL; e = e ->next){
+        if(compareCourse(course, e->course)){
+            exist++;
+        }
+    }
+    if(exist == 1){
+        if(compareCourse(course, (*head)->course)){
+            DeleteHead(&(*head));
+        }
+
+        else{
+            for(e = *head; e->next != NULL; e = e->next){
+
+               if(compareCourse(course, (e->next)->course)){
+                   DeleteAfter(e);
+                   break;
+               }
+            }
+        }
+    }
+    else if(exist > 1){
+        while(done == false){
+            semester_prompt();
+            done = true;
+        }
+    }
+    return exist;
+}
+
+void printTranscript(node **head, int count){
+    node *e;
+    if(count <= 0){
+        empty_transcript_msg();
+    }
+    else{
+        for( e=*head ; e!=NULL ; e=e->next ){
+            printf( "%s %s %s.%d.%d %0.1f %s \n" , e->year, e->grade, (e->course).div, (e->course).dep, (e->course).num, (e->course).assignment, (e->course).title);
+        }
+    }
+}
+
+void printCourseData(node **head, Course course){
+    node *e;
+    for( e=*head ; e!=NULL ; e=e->next ){
+        if(compareCourse(e->course, course)){
+            printf("%s %s\n", e->year, e->grade );
+        }
+    }
+}
+
+double gradeConvert(char *a){
+    double grade = 0.0;
+    if(toupper(a[0]) == 'A'){
+        if(a[1] == '+'){
+            grade = 4.0;
+        }
+        else if(a[1] == '-'){
+            grade = 3.7;
+        }
+        else{
+            grade = 4.0;
+        }
+    }
+    else if(toupper(a[0]) == 'B'){
+        if(a[1] == '+'){
+            grade = 3.3;
+        }
+        else if(a[1] == '-'){
+            grade = 2.7;
+        }
+        else{
+            grade = 3.0;
+        }
+    }
+    else if(toupper(a[0]) == 'C'){
+        if(a[1] == '+'){
+            grade = 2.3;
+        }
+        else if(a[1] == '-'){
+            grade = 1.7;
+        }
+        else{
+            grade = 2.0;
+        }
+    }
+    else if(toupper(a[0]) == 'D'){
+        if(a[1] == '+'){
+            grade = 1.3;
+        }
+        else{
+            grade = 1.0;
+        }
+    }
+    else{
+        grade = 0.0;
+    }
+    return grade;
+}
+
+void gpaCalc(node **head, int count){
+    node *e;
+    if(count == 0){
+        gpa_msg(0);
+    }
+    else{
+        double gpa = 0.0;
+        float totalCred = 0.0;
+        for(e = *head; e != NULL; e = e ->next){
+            gpa += (gradeConvert(e->grade) * (e->course).assignment);
+            totalCred += (e->course).assignment;
+        }
+        gpa_msg(gpa/totalCred);
+    }
+}
+
 int main(int argc, char* argv[]) {
     FILE *input = fopen(argv[1], "r");      //get file and take user inpt
     if (argc == 1) {
@@ -151,6 +271,7 @@ int main(int argc, char* argv[]) {
 
    // printf("%d \n", atoi(strncpy(impzf, inpz, 4)));
      // printf("%d %d\n",'F', impzf);
+    int count = 0;
     while(inp != 'q'){//loop to keep showing menu options
          scanf("%c", &inp);
          inp = tolower(inp);
@@ -218,7 +339,6 @@ int main(int argc, char* argv[]) {
              if(ind != -1){
                  semester_prompt();
                  char inp[7];
-                 int throw;
                  fgets(inp, 7, stdin);
                  grade_prompt();
                  char inp2[3];
@@ -227,7 +347,6 @@ int main(int argc, char* argv[]) {
                  fgets(inp2, 3, stdin);
                  char comp1[5];
                  char comp2[5];
-                 char comp3[2];
                  strncpy(comp1, inp, 4);
                 // strncpy(comp2, head->year, 4);
                  if(!head){
@@ -236,21 +355,23 @@ int main(int argc, char* argv[]) {
                  else if(atoi(comp1) < atoi(strncpy(comp2, head->year, 4))){
                      InsertHead(&head, data[ind], inp, inp2);
                  }
-                 else if(atoi(comp1) == atoi(strncpy(comp2, head->year, 4)) && toupper(inp[6]) == 'S'){
+                 else if(atoi(comp1) == atoi(strncpy(comp2, head->year, 4)) && toupper(inp[5]) >= toupper(head->year[5])){
                      InsertHead(&head, data[ind], inp, inp2);
                  }
                  else{
+
                      for(e = head; e->next!=NULL && atoi(comp1)>=atoi(strncpy(comp2, e->next->year, 4)); e = e ->next){
-                         if(toupper(inp[6]) == toupper(e->year[6])){
+                         if(toupper(inp[5]) >= toupper(e->next->year[5]) && atoi(comp1)==atoi(strncpy(comp2, e->next->year, 4))){
                              break;
                          }
+
                      }
                      InsertAfter(e, data[ind], inp, inp2);
+
                  }
+                 count++;
                  //printf("%s", head->year);
-                 for( e=head ; e!=NULL ; e=e->next ){
-                     printf( "%s\n" , e->year );
-                 }
+                 printTranscript(&head, count);
 
                  course_updated_msg();
                 // printf("%s.%d.%d %0.1f %s\n", data[ind].div, data[ind].dep, data[ind].num, data[ind].assignment, data[ind].title);
@@ -258,15 +379,58 @@ int main(int argc, char* argv[]) {
              menu_prompt();
          }
          else if(inp == '6'){
+             int ind = -1;
+             int exist = -1;
+             char str[100];
+             while(ind == -1 || exist == 0){
+                 course_prompt();
+                 int throw;
+                 scanf("%d\n", &throw);
+                 fgets(str, 100, stdin);
+                 ind = searchCourse(index, str);
+                 if(ind != -1){
+                     exist = searchTranscript(&head, data[ind]);
+                     if(exist == 0){
+                         course_not_taken_msg();
+                     }
+                 }
+                 count--;
+                 printTranscript(&head, count);
+                 transcript_updated_msg();
+
+             }
+
              menu_prompt();
          }
          else if(inp == '7'){
+             printTranscript(&head, count);
              menu_prompt();
          }
          else if(inp == '8'){
+             if(count > 0){
+                 int ind = -1;
+                 int exist = -1;
+                 char str[100];
+                 while(ind == -1 || exist == 0){
+                     course_prompt();
+                     int throw;
+                     scanf("%d\n", &throw);
+                     fgets(str, 100, stdin);
+                     ind = searchCourse(index, str);
+                     if(ind != -1){
+                         exist = searchTranscript(&head, data[ind]);
+                         if(exist == 0){
+                             course_not_taken_msg();
+                         }
+                     }
+
+                 }
+                 printCourseData(&head, data[ind]);
+             }
              menu_prompt();
          }
          else if(inp == '9'){
+             gpaCalc(&head, count);
              menu_prompt();
          }
 

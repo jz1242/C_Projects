@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "prompts.h"
 
 void menu_prompt() {
     printf(
