@@ -1,3 +1,15 @@
+commit fd30eb71ea2df5325100f308c2f866b57617c703
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Apr 1 04:16:31 2017 -0400
+
+    Main functionality complete, testing
+
+commit f50e4f007228905f6b3e68d32c3533ec6d7311d6
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Apr 1 01:53:34 2017 -0400
+
+    Finished linkedList, begin error check
+
 commit 692c4c5b6b391173007d0ddefb536a34505330ea
 Author: Jason Zhang <jz1242@gmail.com>
 Date:   Fri Mar 31 16:23:11 2017 -0400

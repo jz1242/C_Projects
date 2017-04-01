@@ -19,6 +19,7 @@ void InsertAfter(node *e, Course course, char* year, char* grade);
 void InsertHead(node **head, Course course, char* year, char* grade);
 void DeleteAfter(node *e);
 void DeleteHead(node **head);
+int checkValidSem(char *a);
 
 Course createCourse(char *str) {
     Course course;
@@ -124,7 +125,7 @@ void DeleteHead(node **head) {
 int searchTranscript(node **head, Course course) {
     node *e;
     int exist = 0;
-    bool done = false;
+    bool run = false;
     for (e = *head; e != NULL; e = e->next) {
         if (compareCourse(course, e->course)) {
             exist++;
@@ -132,7 +133,7 @@ int searchTranscript(node **head, Course course) {
     }
     if (exist == 1) {
         if (compareCourse(course, (*head)->course)) {
-            DeleteHead(&(*head));
+            DeleteHead(*(&head));
         }
 
         else {
@@ -145,10 +146,39 @@ int searchTranscript(node **head, Course course) {
             }
         }
     } else if (exist > 1) {
-        while (done == false) {
-            semester_prompt();
-            done = true;
-        }
+            int valid2 = 0;
+            char inp[7];
+            while(valid2 == 0){
+                semester_prompt();
+                fgets(inp, 7, stdin);
+                valid2 = checkValidSem(inp);
+                if(!valid2){
+                    invalid_input_msg();
+                }
+            }
+            inp[5] = toupper(inp[5]);
+            if (compareCourse(course, (*head)->course)) {
+                if(strcmp((*head)->year, inp) == 0){
+                    DeleteHead(*(&head));
+                }
+                else{
+                    run = true;
+                }
+
+            }
+            if(run){
+                for(e = *head; e->next !=NULL; e = e->next){
+                     if(compareCourse((e->next)->course, course)){
+                         if(strcmp((e->next)->year, inp) == 0){
+                             break;
+                         }
+                     }
+                 }
+                DeleteAfter(e);
+            }
+
+
+
     }
     return exist;
 }
@@ -208,6 +238,66 @@ int checkValidTitle(char *a){
     return 1;
 }
 
+int checkValidCred(char *a){
+    if(strlen(a) > 4){
+        return 0;
+    }
+    if(a[1] != '.'){
+
+        return 0;
+    }
+    return 1;
+}
+
+int checkValidSem(char *a){
+    if(strlen(a) > 7){
+        return 0;
+    }
+    if(a[4] != '.'){
+
+        return 0;
+    }
+    if(toupper(a[5]) != 'S'){
+        if(toupper(a[5]) != 'F'){
+            return 0;
+        }
+
+    }
+    return 1;
+}
+
+int checkValidGrade(char *a){
+    if(strlen(a) > 3){
+        return 0;
+    }
+    if(toupper(a[0])<65 || toupper(a[0])>70){
+
+        return 0;
+    }
+    if(a[1] != '+'){
+        if(a[1] != '-'){
+            if(a[1] != '/'){
+                return 0;
+            }
+        }
+
+
+    }
+    return 1;
+}
+int checkDup(node **head, Course course, char *sem){
+    node* e;
+    int dup = 0;
+    for(e = *head; e !=NULL; e = e->next){
+        if(compareCourse(e->course, course)){
+            if(strcmp(e->year, sem) == 0){
+                dup = 1;
+                break;
+            }
+        }
+    }
+    return dup;
+}
 double gradeConvert(char *a) {
     double grade = 0.0;
     if (toupper(a[0]) == 'A') {
@@ -367,42 +457,89 @@ int main(int argc, char* argv[]) {
             course_prompt();
             char str[100];
             int ind = -1;
+            int valid = 0;
+            int valid2 = 0;
             while (ind == -1) {
                 int throw;
                 scanf("%d\n", &throw);
                 fgets(str, 100, stdin);
-                ind = searchCourse(index, str);
+                valid = checkValidCourse(str);
+                if(valid){
+                    ind = searchCourse(index, str);
+                }
+                else{
+                    invalid_input_msg();
+                }
+            }
+            while(valid2 == 0){
+                char cred[5];
+                new_credit_prompt();
+                fgets(cred, 100, stdin);
+                valid2 = checkValidCred(cred);
+                if(valid2){
+                    data[ind].assignment = atof(cred);
+                }
+                else{
+                    invalid_input_msg();
+                }
             }
 
-            new_credit_prompt();
-            float inp;
-            scanf("%f", &inp);
-            data[ind].assignment = inp;
-            course_updated_msg();
             printf("%s.%d.%d %0.1f %s\n", data[ind].div, data[ind].dep,
                     data[ind].num, data[ind].assignment, data[ind].title);
-
+            course_updated_msg();
             menu_prompt();
 
         } else if (menu == '5') {
-            course_prompt();
             char str[100];
+            char inp[8];
+            char inp2[4];
             int ind = -1;
-            while (ind == -1) {
-                int throw;
-                scanf("%d\n", &throw);
-                fgets(str, 100, stdin);
-                ind = searchCourse(index, str);
-            }
+            int valid4 = 1;
+            while(valid4 == 1){
+                ind = -1;
+                int valid = 0;
+                int valid2 = 0;
+                int valid3 = 0;
+                while (ind == -1) {
+                    course_prompt();
+                    int throw;
+                    scanf("%d\n", &throw);
+                    fgets(str, 100, stdin);
+                    valid = checkValidCourse(str);
+                    if(valid){
+                        ind = searchCourse(index, str);
+                    }
+                    else{
+                        invalid_input_msg();
+                    }
+                }
 
-            semester_prompt();
-            char inp[7];
-            fgets(inp, 7, stdin);
-            grade_prompt();
-            char inp2[3];
-            int throw2;
-            scanf("%d\n", &throw2);
-            fgets(inp2, 3, stdin);
+
+                while(valid2 == 0){
+                    semester_prompt();
+                    fgets(inp, 7, stdin);
+                    valid2 = checkValidSem(inp);
+                    if(!valid2){
+                        invalid_input_msg();
+                    }
+                }
+                inp[5] = toupper(inp[5]);
+                while(valid3 == 0){
+                    grade_prompt();
+                    int throw2;
+                    scanf("%d\n", &throw2);
+                    fgets(inp2, 3, stdin);
+                    valid3 = checkValidGrade(inp2);
+                    if(!valid3){
+                        invalid_input_msg();
+                    }
+                }
+
+                valid4 = checkDup(&head, data[ind], inp);
+                if(valid4 > 0){
+                    duplicate_course_msg();
+                }
+            }
             char comp1[5];
             char comp2[5];
             strncpy(comp1, inp, 4);
@@ -435,25 +572,35 @@ int main(int argc, char* argv[]) {
         } else if (menu == '6') {
             int ind = -1;
             int exist = -1;
+            int valid = 0;
             char str[100];
             while (ind == -1 || exist == 0) {
                 course_prompt();
                 int throw;
                 scanf("%d\n", &throw);
                 fgets(str, 100, stdin);
-                ind = searchCourse(index, str);
+                valid = checkValidCourse(str);
+                if(valid){
+                    ind = searchCourse(index, str);
+                }
+                else{
+                    invalid_input_msg();
+                }
                 if (ind != -1) {
                     exist = searchTranscript(&head, data[ind]);
                     if (exist == 0) {
                         course_not_taken_msg();
                     }
+                    else{
+                        count--;
+                    }
                 }
-                count--;
-                printTranscript(&head, count);
-                transcript_updated_msg();
+
+                //printTranscript(&head, count);
+
 
             }
-
+            transcript_updated_msg();
             menu_prompt();
         } else if (menu == '7') {
             printTranscript(&head, count);
@@ -462,13 +609,20 @@ int main(int argc, char* argv[]) {
             if (count > 0) {
                 int ind = -1;
                 int exist = -1;
+                int valid = 0;
                 char str[100];
                 while (ind == -1 || exist == 0) {
                     course_prompt();
                     int throw;
                     scanf("%d\n", &throw);
                     fgets(str, 100, stdin);
-                    ind = searchCourse(index, str);
+                    valid = checkValidCourse(str);
+                    if(valid){
+                        ind = searchCourse(index, str);
+                    }
+                    else{
+                        invalid_input_msg();
+                    }
                     if (ind != -1) {
                         exist = searchTranscriptNoDel(&head, data[ind]);
                         if (exist == 0) {
