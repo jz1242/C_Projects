@@ -16,7 +16,7 @@ unittest: unittest.o prompts.o methods.o
 hw5.o: hw5.c prompts.h methods.h
 	$(CC) $(CFLAGS) -c hw5.c
 
-# Compiles dnasearch.c into an object file
+# Compiles prompts.c into an object file
 prompts.o: prompts.c prompts.h
 	$(CC) $(CFLAGS) -c prompts.c
 	

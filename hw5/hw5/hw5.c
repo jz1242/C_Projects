@@ -55,22 +55,28 @@ int main(int argc, char* argv[]) {
             char str[100];
             int ind = -1;
             int valid = 0;
-            while (ind == -1) {
+			while (ind == -1) {
                 course_prompt();
                 int throw;
                 scanf("%d\n", &throw);
                 fgets(str, 100, stdin);
-                valid = checkValidCourse(str);
+                valid = checkValidCourse(str);	//check if course is valid
                 if(valid){
-                    ind = searchCourse(index, str);
+                    ind = searchCourse(index, str);	// look for the course
                 }
                 else{
                     invalid_input_msg();
                 }
             }
+            Course temp = data[ind];
+            for(unsigned j = 0; j < strlen(temp.title); j++){	//remove the new line char
+                if(temp.title[j] == '\n'){
+                    temp.title[j] = '\0';
+                }
+            }
 
-            printf("%s.%d.%d %0.1f %s\n", data[ind].div, data[ind].dep,
-                    data[ind].num, data[ind].assignment, data[ind].title);
+            printf("%s.%03d.%03d %0.1f %s\n", temp.div, temp.dep,
+                    temp.num, temp.assignment, temp.title);
 
             //printf("%s\n", str);
             menu_prompt();
@@ -95,7 +101,7 @@ int main(int argc, char* argv[]) {
             }
             char inp[35];
             while(valid2 == 0){
-                new_title_prompt();
+                new_title_prompt();		//get the new title if its not valid loop it
                 fgets(inp, 100, stdin);
                 valid2 = checkValidTitle(inp);
                 if(valid2){
@@ -106,7 +112,7 @@ int main(int argc, char* argv[]) {
                 }
             }
             if(count > 0){
-                for(e = head; e != NULL; e = e -> next){
+                for(e = head; e != NULL; e = e -> next){	//search through the entire linked list and put new title
                     strcpy(e->course.title, inp);
                 }
             }
@@ -115,12 +121,12 @@ int main(int argc, char* argv[]) {
 
             menu_prompt();
         } else if (menu == '4') {
-            course_prompt();
             char str[100];
             int ind = -1;
             int valid = 0;
             int valid2 = 0;
             while (ind == -1) {
+                course_prompt();
                 int throw;
                 scanf("%d\n", &throw);
                 fgets(str, 100, stdin);
@@ -138,15 +144,19 @@ int main(int argc, char* argv[]) {
                 fgets(cred, 100, stdin);
                 valid2 = checkValidCred(cred);
                 if(valid2){
-                    data[ind].assignment = atof(cred);
+                    data[ind].assignment = atof(cred);	//get the float of the credits
                 }
                 else{
                     invalid_input_msg();
                 }
             }
+            Course temp = data[ind];
+            for(unsigned j = 0; j < strlen(temp.title); j++){	// get rid of the newline char in title
+                if(temp.title[j] == '\n'){
+                    temp.title[j] = '\0';
+                }
+            }
 
-            printf("%s.%d.%d %0.1f %s\n", data[ind].div, data[ind].dep,
-                    data[ind].num, data[ind].assignment, data[ind].title);
             course_updated_msg();
             menu_prompt();
 
@@ -176,7 +186,7 @@ int main(int argc, char* argv[]) {
                 }
 
 
-                while(valid2 == 0){
+                while(valid2 == 0){		//get the semester
                     semester_prompt();
                     fgets(inp, 10, stdin);
                     valid2 = checkValidSem(inp);
@@ -185,7 +195,7 @@ int main(int argc, char* argv[]) {
                     }
                 }
                 inp[5] = toupper(inp[5]);
-                while(valid3 == 0){
+                while(valid3 == 0){//get the grade
                     grade_prompt();
                     int throw2;
                     scanf("%d\n", &throw2);
@@ -206,7 +216,7 @@ int main(int argc, char* argv[]) {
             strncpy(comp1, inp, 4);
 
             // strncpy(comp2, head->year, 4);
-            if (!head) {
+            if (!head) {	//linkedlist cases, insert at front of list or it will go through the list to find the correct place for the data
                 head = Create(data[ind], inp, inp2);
             } else if (atoi(comp1) < atoi(strncpy(comp2, head->year, 4))) {
                 InsertHead(&head, data[ind], inp, inp2);
@@ -214,7 +224,7 @@ int main(int argc, char* argv[]) {
                 InsertHead(&head, data[ind], inp, inp2);
             } else {
 
-                for (e = head; e->next != NULL && atoi(comp1) >= atoi(strncpy(comp2, e->next->year,4)); e = e->next) {
+                for (e = head; e->next != NULL && atoi(comp1) >= atoi(strncpy(comp2, e->next->year,4)); e = e->next) {	//goes through entire linked list
                     if (toupper(inp[5]) >= toupper(e->next->year[5]) && atoi(comp1) == atoi(strncpy(comp2, e->next->year, 4))) {
                         break;
                     }
@@ -225,9 +235,9 @@ int main(int argc, char* argv[]) {
             }
             count++;
             //printf("%s", head->year);
-            printTranscript(&head, count);
+           // printTranscript(&head, count);
 
-            course_updated_msg();
+            transcript_updated_msg();
             // printf("%s.%d.%d %0.1f %s\n", data[ind].div, data[ind].dep, data[ind].num, data[ind].assignment, data[ind].title);
 
             menu_prompt();
@@ -250,7 +260,7 @@ int main(int argc, char* argv[]) {
                         invalid_input_msg();
                     }
                     if (ind != -1) {
-                        exist = searchTranscript(&head, data[ind]);
+                        exist = searchTranscript(&head, data[ind]);	//looks through the entire transcript and try to delete the course
                         if (exist == 0) {
                             course_not_taken_msg();
                         }
@@ -267,7 +277,7 @@ int main(int argc, char* argv[]) {
             }
             menu_prompt();
         } else if (menu == '7') {
-            printTranscript(&head, count);
+            printTranscript(&head, count);	//print out the entire transcript
             menu_prompt();
         } else if (menu == '8') {
             if (count > 0) {
@@ -280,26 +290,26 @@ int main(int argc, char* argv[]) {
                     int throw;
                     scanf("%d\n", &throw);
                     fgets(str, 100, stdin);
-                    valid = checkValidCourse(str);
+                    valid = checkValidCourse(str);	//check if the course is valid
                     if(valid){
-                        ind = searchCourse(index, str);
+                        ind = searchCourse(index, str);	//look for the course
                     }
                     else{
                         invalid_input_msg();
                     }
                     if (ind != -1) {
-                        exist = searchTranscriptNoDel(&head, data[ind]);
+                        exist = searchTranscriptNoDel(&head, data[ind]);	//look through the linked list 
                         if (exist == 0) {
                             course_not_taken_msg();
                         }
                     }
 
                 }
-                printCourseData(&head, data[ind]);
+                printCourseData(&head, data[ind]);	//print out the formatted course data
             }
             menu_prompt();
         } else if (menu == '9') {
-            gpaCalc(&head, count);
+            gpaCalc(&head, count);	//print out the calculated gpa
             menu_prompt();
         }
 

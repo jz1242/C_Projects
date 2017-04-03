@@ -11,7 +11,7 @@
 #include "methods.h"
 #include "prompts.h"
 
-Course createCourse(char *str) {
+Course createCourse(char *str) {	//creates course by parsing the input string
     Course course;
     strncpy(course.div, str, 2);
     course.div[2] = '\0';
@@ -29,14 +29,21 @@ Course createCourse(char *str) {
     return course;
 
 }
-void printCourses(int num) {
+void printCourses(int num) {		//prints all of the courses
+
     for (int i = 0; i < num; i++) {
-        printf("%s.%d.%d %0.1f %s\n", data[i].div, data[i].dep, data[i].num,
-                data[i].assignment, data[i].title);
+        Course temp = data[i];
+        for(unsigned j = 0; j < strlen(temp.title); j++){
+            if(temp.title[j] == '\n'){
+                temp.title[j] = '\0';
+            }
+        }
+        printf("%s.%03d.%03d %0.1f %s\n", temp.div, temp.dep, temp.num,
+                temp.assignment, temp.title);
     }
 
 }
-int checkCase(char* a, char* b) {
+int checkCase(char* a, char* b) {		//checks if the strings are equivalent case insensitive
     int equal = 1;
     // printf("%d %d \n", strlen(a), strlen(b));
     for (unsigned i = 0; i < strlen(b); i++) {
@@ -46,7 +53,7 @@ int checkCase(char* a, char* b) {
     }
     return equal;
 }
-int compareCourse(Course a, Course b) {
+int compareCourse(Course a, Course b) {	//compares both of the courses to see if theyre equal
     int equal = 1;
     if (checkCase(a.div, b.div) == 0) {
         equal = 0;
@@ -63,7 +70,7 @@ int compareCourse(Course a, Course b) {
     //printf("%d\n",equal );
     return equal;
 }
-int searchCourse(int num, char *str) {
+int searchCourse(int num, char *str) {	//search through all of the courses to see if it exists
     Course comp = createCourse(str);
     bool s = false;
     int ind = -1;
@@ -79,7 +86,7 @@ int searchCourse(int num, char *str) {
     return ind;
 }
 
-node* Create(Course course, char* year, char* grade) {
+node* Create(Course course, char* year, char* grade) {	//creates a course node
     node *e = malloc(sizeof(node));
     e->next = NULL;
     e->course = course;
@@ -90,19 +97,19 @@ node* Create(Course course, char* year, char* grade) {
     return e;
 }
 
-void InsertAfter(node *e, Course course, char* year, char* grade) {
+void InsertAfter(node *e, Course course, char* year, char* grade) { //insert a node after a passed in node
     node *newE = Create(course, year, grade);
     newE->next = e->next;
     e->next = newE;
 }
 
-void InsertHead(node **head, Course course, char* year, char* grade) {
+void InsertHead(node **head, Course course, char* year, char* grade) {	//insert a node at the head
     node *e = Create(course, year, grade);
     e->next = *head;
     *head = e;
 }
 
-void DeleteAfter(node *e) {
+void DeleteAfter(node *e) {	//delete a node after a given node
     node* eNext = e->next;
     if (!eNext) {
         return;
@@ -110,13 +117,13 @@ void DeleteAfter(node *e) {
     e->next = e->next->next;
     free(eNext);
 }
-void DeleteHead(node **head) {
+void DeleteHead(node **head) {	//delete the node at the head
     node* e = (*head);
     *head = e->next;
     free(e);
 }
 
-int searchTranscript(node **head, Course course) {
+int searchTranscript(node **head, Course course) {	//search through the transcript
     node *e;
     int exist = 0;
     bool run = false;
@@ -125,12 +132,12 @@ int searchTranscript(node **head, Course course) {
             exist++;
         }
     }
-    if (exist == 1) {
+    if (exist == 1) {	//delete immediately if there was only 1
         if (compareCourse(course, (*head)->course)) {
             DeleteHead(*(&head));
         }
 
-        else {
+        else {	//search through linkedlist and delete
             for (e = *head; e->next != NULL; e = e->next) {
 
                 if (compareCourse(course, (e->next)->course)) {
@@ -139,18 +146,17 @@ int searchTranscript(node **head, Course course) {
                 }
             }
         }
-    } else if (exist > 1) {
+    } else if (exist > 1) {	//check if there are more than one course
             int valid2 = 0;
             char inp[7];
-            while(valid2 == 0){
+            while(valid2 == 0){;
                 semester_prompt();
-                fgets(inp, 7, stdin);
+                fgets(inp, 100, stdin);
                 valid2 = checkValidSem(inp);
-                if(!valid2){
-                    invalid_input_msg();
-                }
+				inp[5] = toupper(inp[5]);
+                valid2 = checkDup(&(*head), course,inp);	//check if theres a duplicate
             }
-            inp[5] = toupper(inp[5]);
+            
             if (compareCourse(course, (*head)->course)) {
                 if(strcmp((*head)->year, inp) == 0){
                     DeleteHead(*(&head));
@@ -164,7 +170,7 @@ int searchTranscript(node **head, Course course) {
                 run = true;
             }
             if(run){
-                for(e = *head; e->next !=NULL; e = e->next){
+                for(e = *head; e->next !=NULL; e = e->next){	//delte the course with the inputted semester
                      if(compareCourse((e->next)->course, course)){
                          if(strcmp((e->next)->year, inp) == 0){
                              break;
@@ -180,7 +186,7 @@ int searchTranscript(node **head, Course course) {
     return exist;
 }
 
-int searchTranscriptNoDel(node **head, Course course){
+int searchTranscriptNoDel(node **head, Course course){	//search through the transcripts without deleting
     node *e;
     int exist = 0;
     for (e = *head; e != NULL; e = e->next) {
@@ -192,20 +198,29 @@ int searchTranscriptNoDel(node **head, Course course){
 }
 
 
-void printTranscript(node **head, int count) {
+void printTranscript(node **head, int count) {		//print the entire transcript
     node *e;
     if (count <= 0) {
         empty_transcript_msg();
     } else {
         for (e = *head; e != NULL; e = e->next) {
-            printf("%s %s %s.%d.%d %0.1f %s \n", e->year, e->grade,
-                    (e->course).div, (e->course).dep, (e->course).num,
-                    (e->course).assignment, (e->course).title);
+            Course temp = e->course;
+            for(unsigned j = 0; j < strlen(temp.title); j++){
+				
+                if(temp.title[j]== '\n'){
+                    temp.title[j] = '\0';
+					break;
+                }
+            }
+
+            printf("%s %s %s.%03d.%03d %0.1f %s\n",e->year, e->grade,
+                    temp.div, temp.dep, temp.num,
+                    temp.assignment, temp.title);
         }
     }
 }
 
-void printCourseData(node **head, Course course) {
+void printCourseData(node **head, Course course) {		//print all the course data
     node *e;
     for (e = *head; e != NULL; e = e->next) {
         if (compareCourse(course,e->course)) {
@@ -214,7 +229,7 @@ void printCourseData(node **head, Course course) {
     }
 }
 
-int checkValidCourse(char *a){
+int checkValidCourse(char *a){		//check if the course is valid 
     int valid = 1;
     if(a[2] != '.' || a[6] != '.' || strlen(a) > 11 ){
         valid = 0;
@@ -228,14 +243,14 @@ int checkValidCourse(char *a){
     return valid;
 }
 
-int checkValidTitle(char *a){
+int checkValidTitle(char *a){		//check if title is within the requirements
     if(strlen(a) > 33){
         return 0;
     }
     return 1;
 }
 
-int checkValidCred(char *a){
+int checkValidCred(char *a){	//check if credit assignment is valid
     if(strlen(a) > 4){
         return 0;
     }
@@ -246,7 +261,7 @@ int checkValidCred(char *a){
     return 1;
 }
 
-int checkValidSem(char *a){
+int checkValidSem(char *a){	//check if the semester is valid
     if(strlen(a) > 7){
         return 0;
     }
@@ -263,7 +278,7 @@ int checkValidSem(char *a){
     return 1;
 }
 
-int checkValidGrade(char *a){
+int checkValidGrade(char *a){	//check if the grade is valid
     if(strlen(a) > 3){
         return 0;
     }
@@ -282,7 +297,7 @@ int checkValidGrade(char *a){
     }
     return 1;
 }
-int checkDup(node **head, Course course, char *sem){
+int checkDup(node **head, Course course, char *sem){		//check if there is a duplicate course
     sem[6] = '\0';
     node* e;
     int dup = 0;
@@ -297,7 +312,7 @@ int checkDup(node **head, Course course, char *sem){
     }
     return dup;
 }
-double gradeConvert(char *a) {
+double gradeConvert(char *a) {		//convert the grade to double 
     double grade = 0.0;
     if (toupper(a[0]) == 'A') {
         if (a[1] == '+') {
@@ -335,7 +350,7 @@ double gradeConvert(char *a) {
     return grade;
 }
 
-void gpaCalc(node **head, int count) {
+void gpaCalc(node **head, int count) {	//calculate the gpa of the transcript
     node *e;
     if (count == 0) {
         gpa_msg(0);
