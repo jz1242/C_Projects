@@ -1,0 +1,17 @@
+commit 73a358afbcd81289e82b8cc673cd2c54a313a643
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Apr 8 12:09:51 2017 -0400
+
+    Completed basic functionality, need error checking
+
+commit 7798e7b9b07ae7656e1e9d0ec47fa279cda53457
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Apr 8 11:47:13 2017 -0400
+
+    Cropping added, swap added
+
+commit 2ed3d410c09b225c1adc462d10deb03926dd5c2c
+Author: Jason Zhang <jz1242@gmail.com>
+Date:   Sat Apr 8 00:25:39 2017 -0400
+
+    Initial commit, finished main menu
